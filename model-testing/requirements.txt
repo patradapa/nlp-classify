@@ -1,0 +1,9 @@
+pythainlp
+scikit-learn
+transformers
+torch
+pandas
+statsmodels
+accelerate
+sentencepiece
+protobuf

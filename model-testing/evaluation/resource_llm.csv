@@ -1,0 +1,2 @@
+model,device,params_or_size,disk_size_mb,load_time_sec,train_time_sec,infer_time_sec_80samples,infer_time_ms_per_sample
+"llm_prompting (typhoon-1b, local)",mps,"1,235,814,400 params",2471.65,5.606,0.0,76.3837,954.797

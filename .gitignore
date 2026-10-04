@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Secrets
+.env
+.env.*
+
+# Model weights and training checkpoints (regenerate with wangchanberta/train_bert.py)
+model-testing/wangchanberta-chat-classifier/
+checkpoint-*/
+*.safetensors
+*.bin
+*.pt
+*.pth
+runs/
+wandb/
+mlruns/
+
+# Prediction caches (regenerate by re-running the pipeline scripts)
+*.pkl
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+.claude/settings.local.json

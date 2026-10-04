@@ -1,0 +1,5 @@
+model,accuracy,macro_f1
+classical_svm,1.0,1.0
+classical_rf,1.0,1.0
+wangchanberta,0.925,0.924812030075188
+llm_prompting,0.75,0.7421740749226715
