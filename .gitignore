@@ -14,8 +14,8 @@ env/
 .env
 .env.*
 
-# Model weights and training checkpoints (regenerate with wangchanberta/train_bert.py)
-model-testing/wangchanberta-chat-classifier/
+# Model weights and training checkpoints (regenerate with 2-train-test-model/wangchanberta/train_bert.py)
+2-train-test-model/wangchanberta/wangchanberta-chat-classifier/
 checkpoint-*/
 *.safetensors
 *.bin

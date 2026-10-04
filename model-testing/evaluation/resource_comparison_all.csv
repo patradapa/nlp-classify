@@ -1,5 +1,0 @@
-model,device,params_or_size,disk_size_mb,load_time_sec,train_time_sec,infer_time_sec_80samples,infer_time_ms_per_sample
-classical_svm,cpu,190 support vectors,0.11,0.0,0.062,0.0016,0.02
-classical_rf,cpu,200 trees,1.2,0.0,0.093,0.0048,0.06
-wangchanberta,mps,"105,247,492 params",1263.18,0.674,42.54,0.2441,3.052
-"llm_prompting (typhoon-1b, local)",mps,"1,235,814,400 params",2471.65,5.606,0.0,76.3837,954.797

@@ -1,15 +1,22 @@
 import json
+import pickle
 import re
 import sys
+import time
 from pathlib import Path
 
 import pandas as pd
+import torch
+from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
+from transformers import pipeline
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+SCRIPT_DIR = Path(__file__).resolve().parent             # 2-train-test-model/llm_prompting/
+ROOT = SCRIPT_DIR.parent.parent                          # repo root
+
 # รันแบบ local ด้วย Typhoon (scb10x/typhoon-ai) ผ่าน HuggingFace transformers
-# แทนการเรียก Anthropic API เนื่องจากไม่มี ANTHROPIC_API_KEY ใน environment นี้
 MODEL_NAME = "typhoon-ai/llama3.2-typhoon2-1b-instruct"
 
 VALID_LABELS = ["sale_oneoff", "sale_enterprise", "it_support", "admin_general"]
@@ -67,24 +74,26 @@ def classify_with_llm(text: str, pipe) -> dict:
 
 
 if __name__ == "__main__":
-    import torch
-    from transformers import pipeline
-
     device = "mps" if torch.backends.mps.is_available() else "cpu"
-    print(f"Loading {MODEL_NAME} on {device} ...")
+    print(f"[Track C][1/4] โหลดโมเดล {MODEL_NAME} บน {device} ...")
     pipe = pipeline(
         "text-generation",
         model=MODEL_NAME,
-        torch_dtype=torch.bfloat16,
+        dtype=torch.bfloat16,
         device=device,
     )
 
-    df = pd.read_csv("data/mock_conversations_400.csv")
+    print("[Track C][2/4] โหลดข้อมูล mock + แบ่ง train/test ...")
+    df = pd.read_csv(ROOT / "1-data" / "mock_conversations_400.csv")
     X_train, X_test, y_train, y_test = train_test_split(
         df["text"], df["label"], test_size=0.2, stratify=df["label"], random_state=42
     )
+    print(f"  train={len(X_train)} / test={len(X_test)}")
 
+    print(f"[Track C][3/4] classify ทีละข้อความด้วย few-shot prompting ({len(X_test)} ตัวอย่าง) ...")
+    
     llm_preds = []
+    t0 = time.perf_counter()
     for i, t in enumerate(X_test):
         try:
             result = classify_with_llm(t, pipe)
@@ -94,10 +103,15 @@ if __name__ == "__main__":
             llm_preds.append("admin_general")  # fallback label
         if (i + 1) % 10 == 0:
             print(f"  {i + 1}/{len(X_test)} classified")
+    infer_time_ms_per_sample = (time.perf_counter() - t0) / len(X_test) * 1000
 
-    from sklearn.metrics import classification_report
+    print("[Track C][4/4] สรุปผล + บันทึก cache ...")
     print("LLM Prompting (Typhoon local):\n", classification_report(y_test, llm_preds))
 
-    import pickle
-    with open("llm_prompting/preds_cache.pkl", "wb") as f:
-        pickle.dump({"y_test": list(y_test), "llm_preds": llm_preds}, f)
+    with open(SCRIPT_DIR / "preds_cache.pkl", "wb") as f:
+        pickle.dump({
+            "y_test": list(y_test),
+            "llm_preds": llm_preds,
+            "infer_time_ms_per_sample": infer_time_ms_per_sample,
+        }, f)
+    print(f"  บันทึก predictions ไว้ที่ {SCRIPT_DIR / 'preds_cache.pkl'}")

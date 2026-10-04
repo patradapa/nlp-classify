@@ -1,3 +1,0 @@
-model,device,params_or_size,disk_size_mb,load_time_sec,train_time_sec,infer_time_sec_80samples,infer_time_ms_per_sample
-classical_svm,cpu,190 support vectors,0.11,0.0,0.062,0.0016,0.02
-classical_rf,cpu,200 trees,1.2,0.0,0.093,0.0048,0.06

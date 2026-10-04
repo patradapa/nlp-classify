@@ -1,2 +1,0 @@
-model,device,params_or_size,disk_size_mb,load_time_sec,train_time_sec,infer_time_sec_80samples,infer_time_ms_per_sample
-wangchanberta,mps,"105,247,492 params",1263.18,0.674,42.54,0.2441,3.052
